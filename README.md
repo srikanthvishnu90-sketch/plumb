@@ -7,7 +7,9 @@ one actionable class brief — never a diagnosis, never a ranking.
 
 The product's job is to move judgment from the institution to the student and to make
 every insight *actionable*: connect how a lesson **felt** to how it was **understood**,
-and give both sides one concrete next step.
+and give both sides one concrete next step. The student's payoff is theirs and immediate —
+a self-scored *from-memory check* against a worked example, owned by the student and never
+gated on a teacher's grade.
 
 > **Read [CLAUDE.md](./CLAUDE.md) first.** It is the durable project context — purpose,
 > architecture (ports & adapters), hard guardrails, product-safety rules, and the domain
@@ -30,13 +32,20 @@ and give both sides one concrete next step.
 ### Student
 
 1. **Sign in** as a student.
-2. **Reflect in a GPT-style chat** — one adaptive question at a time, with quick-reply
-   chips for scales/choices and a free-text composer otherwise. Calm, reward-free, and
-   colour-neutral (alignment reads ink, a gap reads warm — never red/green).
-3. End on a **summary you can correct** and **one small next step** you choose.
-4. **Timeline** — over time, each reflection is set beside its graded result so you can
-   see whether your read on your own work is getting closer to the truth. This is the
-   honest, *post-hoc* replacement for a pre-registered confidence bet.
+2. **Go through it in a GPT-style chat** ("Today's check") — one adaptive question at a
+   time, with quick-reply chips for scales/choices and a free-text composer otherwise.
+   Calm, reward-free, and colour-neutral (alignment reads ink, a gap reads warm — never
+   red/green).
+3. Get a short summary and choose **one small next step**.
+4. **The from-memory check** (when the lesson has a worked example): attempt the main idea
+   from memory, reveal the exemplar, and **self-score** — *I've got it / Partly / Not yet*.
+   This is the payoff the student **owns**: an immediate, private verdict with **no teacher
+   grade and no waiting**. It is stored student-privately and never flows to a teacher.
+5. **Timeline** — leads with *your from-memory checks over time* and reads your chosen next
+   steps back to you, so you see your own evidence that it moved. Below that, once work is
+   graded, each check is set beside its result so you can watch your read on your own work
+   get closer to the truth (the honest, *post-hoc* calibration signal — a byproduct, never
+   the pitch).
 
 **Safety:** if a student's message suggests a crisis, the chat yields to a calm, supportive
 screen and the concern is routed to a counselor — decided by deterministic detection, never
@@ -72,6 +81,8 @@ cp .env.example .env.local   # then add keys as needed
 | `DATABASE_URL`      | Postgres persistence (self-provisions migrations + RLS)       |
 | `RESEND_API_KEY` + `EMAIL_FROM` | Magic-link sign-in emails (else the dev link shows on-screen) |
 | `PILOT_ACCESS_CODE` | Closed-pilot enrollment gate                                  |
+| `SESSION_SECRET`    | Signs the session cookie (required in production)             |
+| `REFLECTION_KEY_HEX`| AES-256-GCM key sealing reflection text at rest               |
 | `CRISIS_KEY_HEX`    | AES-256-GCM key sealing crisis-escalation text                |
 
 **Secrets never leave your machine.** `.env.local` and all key/credential material are
